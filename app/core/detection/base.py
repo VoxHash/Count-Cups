@@ -314,7 +314,9 @@ class MediaPipeDetector(DetectionEngine):
 
         return None
 
-    def _get_mouth_center(self, face_landmarks: Any, frame_shape: tuple[int, int]) -> tuple[int, int]:
+    def _get_mouth_center(
+        self, face_landmarks: Any, frame_shape: tuple[int, int]
+    ) -> tuple[int, int]:
         """Get mouth center from face landmarks."""
         # MediaPipe face mesh mouth landmarks (simplified)
         mouth_landmarks = [61, 84, 17, 314, 405, 320, 307, 375, 321, 308, 324, 318]
