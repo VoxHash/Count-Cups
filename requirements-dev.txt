@@ -1,0 +1,22 @@
+# Development dependencies for Count-Cups
+-r requirements.txt
+
+# Testing
+pytest>=7.0.0
+pytest-qt>=4.0.0
+pytest-cov>=4.0.0
+
+# Code Quality
+ruff>=0.1.0
+black>=23.0.0
+mypy>=1.0.0
+pre-commit>=3.0.0
+
+# Building
+nuitka>=1.8.0
+
+# Optional dependencies for testing
+# Note: MediaPipe doesn't support Python 3.13+ yet
+# Install manually if needed: pip install mediapipe tensorflow
+# mediapipe>=0.10.0
+# tensorflow>=2.13.0

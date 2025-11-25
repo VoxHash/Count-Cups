@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6E3EBD"/>
+      <stop offset="100%" stop-color="#00C8C8"/>
+    </linearGradient>
+    <clipPath id="r">
+      <rect x="0" y="0" width="1024" height="1024" rx="180" ry="180"/>
+    </clipPath>
+  </defs>
+  <rect x="0" y="0" width="1024" height="1024" fill="url(#g)" clip-path="url(#r)"/>
+  <!-- Cup body -->
+  <g>
+    <rect x="220" y="200" width="584" height="620" rx="90" fill="white"/>
+    <rect x="220" y="200" width="584" height="40" rx="20" fill="url(#g)"/>
+    <ellipse cx="770" cy="440" rx="120" ry="160" fill="white"/>
+    <ellipse cx="770" cy="440" rx="80" ry="120" fill="url(#g)"/>
+    <!-- Water -->
+    <path d="M260 560 C 380 540, 540 580, 740 560 L 740 800 L 260 800 Z" fill="#00E1D2" opacity="0.9"/>
+    <!-- Tick marks -->
+    <rect x="270" y="720" width="140" height="12" rx="6" fill="#ffffff" opacity="0.9"/>
+    <rect x="270" y="650" width="140" height="12" rx="6" fill="#ffffff" opacity="0.9"/>
+    <rect x="270" y="590" width="140" height="12" rx="6" fill="#ffffff" opacity="0.9"/>
+    <rect x="270" y="540" width="140" height="12" rx="6" fill="#ffffff" opacity="0.9"/>
+    <rect x="270" y="495" width="140" height="12" rx="6" fill="#ffffff" opacity="0.9"/>
+  </g>
+</svg>
