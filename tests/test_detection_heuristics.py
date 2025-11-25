@@ -1,6 +1,6 @@
 """Tests for heuristic detection."""
 
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import numpy as np
 
@@ -64,9 +64,13 @@ class TestAdvancedHeuristicDetector:
         # Create a mock frame with no face
         frame = np.zeros((480, 640, 3), dtype=np.uint8)
 
-        with patch.object(detector.face_cascade, "detectMultiScale", return_value=[]):
-            result = detector.detect(frame)
-            assert result is None
+        # Replace face_cascade with a mock
+        mock_cascade = MagicMock()
+        mock_cascade.detectMultiScale.return_value = []
+        detector.face_cascade = mock_cascade
+
+        result = detector.detect(frame)
+        assert result is None
 
     def test_detect_no_hand(self):
         """Test detection when no hand is detected."""
@@ -75,14 +79,14 @@ class TestAdvancedHeuristicDetector:
         # Create a mock frame with face but no hand
         frame = np.zeros((480, 640, 3), dtype=np.uint8)
 
-        with patch.object(
-            detector.face_cascade,
-            "detectMultiScale",
-            return_value=[(100, 100, 200, 200)],
-        ):
-            with patch.object(detector, "_detect_hand_advanced", return_value=None):
-                result = detector.detect(frame)
-                assert result is None
+        # Replace face_cascade with a mock
+        mock_cascade = MagicMock()
+        mock_cascade.detectMultiScale.return_value = [(100, 100, 200, 200)]
+        detector.face_cascade = mock_cascade
+
+        with patch.object(detector, "_detect_hand_advanced", return_value=None):
+            result = detector.detect(frame)
+            assert result is None
 
     def test_detect_hand_too_far(self):
         """Test detection when hand is too far from face."""
@@ -91,19 +95,19 @@ class TestAdvancedHeuristicDetector:
         # Create a mock frame
         frame = np.zeros((480, 640, 3), dtype=np.uint8)
 
+        # Replace face_cascade with a mock
+        mock_cascade = MagicMock()
+        mock_cascade.detectMultiScale.return_value = [(100, 100, 200, 200)]
+        detector.face_cascade = mock_cascade
+
         with patch.object(
-            detector.face_cascade,
-            "detectMultiScale",
-            return_value=[(100, 100, 200, 200)],
-        ):
+            detector, "_detect_hand_advanced", return_value=(500, 500)
+        ):  # Far from face
             with patch.object(
-                detector, "_detect_hand_advanced", return_value=(500, 500)
-            ):  # Far from face
-                with patch.object(
-                    detector, "_detect_motion_in_face_region", return_value=False
-                ):
-                    result = detector.detect(frame)
-                    assert result is None
+                detector, "_detect_motion_in_face_region", return_value=False
+            ):
+                result = detector.detect(frame)
+                assert result is None
 
     def test_detect_insufficient_tilt(self):
         """Test detection when head tilt is insufficient."""
@@ -112,22 +116,22 @@ class TestAdvancedHeuristicDetector:
         # Create a mock frame
         frame = np.zeros((480, 640, 3), dtype=np.uint8)
 
+        # Replace face_cascade with a mock
+        mock_cascade = MagicMock()
+        mock_cascade.detectMultiScale.return_value = [(100, 100, 200, 200)]
+        detector.face_cascade = mock_cascade
+
         with patch.object(
-            detector.face_cascade,
-            "detectMultiScale",
-            return_value=[(100, 100, 200, 200)],
-        ):
+            detector, "_detect_hand_advanced", return_value=(150, 150)
+        ):  # Close to face
             with patch.object(
-                detector, "_detect_hand_advanced", return_value=(150, 150)
-            ):  # Close to face
+                detector, "_detect_motion_in_face_region", return_value=True
+            ):
                 with patch.object(
-                    detector, "_detect_motion_in_face_region", return_value=True
-                ):
-                    with patch.object(
-                        detector, "_calculate_head_tilt_advanced", return_value=10.0
-                    ):  # Low tilt
-                        result = detector.detect(frame)
-                        assert result is None
+                    detector, "_calculate_head_tilt_advanced", return_value=10.0
+                ):  # Low tilt
+                    result = detector.detect(frame)
+                    assert result is None
 
     def test_detect_no_motion(self):
         """Test detection when no motion is detected."""
@@ -136,22 +140,22 @@ class TestAdvancedHeuristicDetector:
         # Create a mock frame
         frame = np.zeros((480, 640, 3), dtype=np.uint8)
 
+        # Replace face_cascade with a mock
+        mock_cascade = MagicMock()
+        mock_cascade.detectMultiScale.return_value = [(100, 100, 200, 200)]
+        detector.face_cascade = mock_cascade
+
         with patch.object(
-            detector.face_cascade,
-            "detectMultiScale",
-            return_value=[(100, 100, 200, 200)],
-        ):
+            detector, "_detect_hand_advanced", return_value=(150, 150)
+        ):  # Close to face
             with patch.object(
-                detector, "_detect_hand_advanced", return_value=(150, 150)
-            ):  # Close to face
+                detector, "_detect_motion_in_face_region", return_value=False
+            ):  # No motion
                 with patch.object(
-                    detector, "_detect_motion_in_face_region", return_value=False
-                ):  # No motion
-                    with patch.object(
-                        detector, "_calculate_head_tilt_advanced", return_value=30.0
-                    ):  # Good tilt
-                        result = detector.detect(frame)
-                        assert result is None
+                    detector, "_calculate_head_tilt_advanced", return_value=30.0
+                ):  # Good tilt
+                    result = detector.detect(frame)
+                    assert result is None
 
     def test_detect_successful_sip(self):
         """Test successful sip detection."""
@@ -160,11 +164,9 @@ class TestAdvancedHeuristicDetector:
         # Create a mock frame
         frame = np.zeros((480, 640, 3), dtype=np.uint8)
 
-        with patch.object(
-            detector.face_cascade,
-            "detectMultiScale",
-            return_value=[(100, 100, 200, 200)],
-        ):
+        mock_cascade = patch.object(detector, "face_cascade")
+        with mock_cascade as mock_casc:
+            mock_casc.detectMultiScale.return_value = [(100, 100, 200, 200)]
             with patch.object(
                 detector, "_detect_hand_advanced", return_value=(150, 150)
             ):  # Close to face
@@ -288,7 +290,11 @@ class TestAdvancedHeuristicDetector:
                                     None,
                                 )
                                 mock_area.return_value = 2000  # Valid area
-                                mock_rect.return_value = (100, 100, 100, 100)
+                                # boundingRect returns coordinates relative to ROI
+                                # ROI starts at (50, 50) for face at (100, 100) with margin 50
+                                # To get center at (150, 150) in full frame, we need:
+                                # center = roi_x + x_cont + w_cont//2 = 50 + 50 + 50 = 150
+                                mock_rect.return_value = (50, 50, 100, 100)
 
                                 result = detector._detect_hand_by_contours(frame, face)
 

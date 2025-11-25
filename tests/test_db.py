@@ -206,6 +206,8 @@ class TestDatabase:
 
     def test_update_daily_goal(self, temp_db):
         """Test updating daily goal."""
+        from datetime import datetime
+
         # Create goal
         target_date = date.today()
         goal = temp_db.get_or_create_daily_goal(target_date, 2000)
@@ -214,6 +216,7 @@ class TestDatabase:
         goal.achieved_ml = 1500.0
         goal.is_achieved = False
         goal.streak_days = 5
+        goal.updated_at = datetime.now()
 
         success = temp_db.update_daily_goal(goal)
         assert success is True

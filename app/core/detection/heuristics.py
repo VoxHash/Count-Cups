@@ -370,3 +370,10 @@ class AdvancedHeuristicDetector(HeuristicDetector):
         confidence += duration_factor * 0.2
 
         return float(min(1.0, confidence))
+
+    def cleanup(self) -> None:
+        """Clean up resources and reset state."""
+        super().cleanup()
+        self.detection_frames = []
+        self.sip_in_progress = False
+        self.prev_gray = None
