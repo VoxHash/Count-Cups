@@ -71,6 +71,14 @@ class ThemeManager(QObject):
                     "text_disabled": "#94a3b8",
                     "shadow": "#00000020",
                     "overlay": "#00000080",
+                    # Additional colors for modern UI
+                    "card_background": "#ffffff",
+                    "card_border": "#e2e8f0",
+                    "button_primary": "#2563eb",
+                    "button_secondary": "#64748b",
+                    "button_hover": "#1d4ed8",
+                    "accent": "#2563eb",
+                    "accent_hover": "#1d4ed8",
                 },
                 "fonts": {
                     "family": "Segoe UI, Arial, sans-serif",
@@ -151,6 +159,14 @@ class ThemeManager(QObject):
                     "text_disabled": "#44475a",
                     "shadow": "#00000040",
                     "overlay": "#00000080",
+                    # Additional colors for modern UI
+                    "card_background": "#44475a",
+                    "card_border": "#6272a4",
+                    "button_primary": "#bd93f9",
+                    "button_secondary": "#6272a4",
+                    "button_hover": "#a855f7",
+                    "accent": "#bd93f9",
+                    "accent_hover": "#a855f7",
                 },
                 "fonts": {
                     "family": "JetBrains Mono, Consolas, monospace",
