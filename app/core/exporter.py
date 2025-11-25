@@ -300,8 +300,10 @@ class DataExporter:
                 # Create SipEvent object
                 # Convert source string to EventSource enum
                 source_str = str(row["source"])
-                source = EventSource.AUTO if source_str == "auto" else EventSource.MANUAL
-                
+                source = (
+                    EventSource.AUTO if source_str == "auto" else EventSource.MANUAL
+                )
+
                 event = SipEvent(
                     timestamp=datetime.fromisoformat(row["timestamp"]),
                     profile_id=int(row["profile_id"]),

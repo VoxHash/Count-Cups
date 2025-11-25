@@ -182,6 +182,7 @@ def main() -> int:
             app_instance = QApplication.instance()
             if app_instance:
                 from PyQt6.QtWidgets import QApplication as QApp
+
                 if isinstance(app_instance, QApp):
                     QMessageBox.critical(
                         None,

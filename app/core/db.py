@@ -1,10 +1,9 @@
 """Database operations and migrations."""
 
-from typing import Any
-
 import sqlite3
 from datetime import date, datetime
 from pathlib import Path
+from typing import Any
 
 from app.core.config import settings
 from app.core.logging import get_logger

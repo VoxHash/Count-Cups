@@ -292,11 +292,9 @@ class AdvancedHeuristicDetector(HeuristicDetector):
                 # line_data is a numpy array from cv2.HoughLines
                 # Type ignore needed because mypy doesn't recognize cv2 array types properly
                 if isinstance(line_data, np.ndarray) and line_data.size >= 2:
-                    rho = float(line_data[0])
-                    theta = float(line_data[1])
+                    theta = float(line_data[1])  # type: ignore[index]
                     angle = float(np.degrees(theta))
                 elif isinstance(line_data, (list, tuple)) and len(line_data) >= 2:
-                    rho = float(line_data[0])
                     theta = float(line_data[1])
                     angle = float(np.degrees(theta))
                 else:
