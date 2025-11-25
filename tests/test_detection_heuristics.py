@@ -164,44 +164,46 @@ class TestAdvancedHeuristicDetector:
         # Create a mock frame
         frame = np.zeros((480, 640, 3), dtype=np.uint8)
 
-        mock_cascade = patch.object(detector, "face_cascade")
-        with mock_cascade as mock_casc:
-            mock_casc.detectMultiScale.return_value = [(100, 100, 200, 200)]
+        # Replace face_cascade with a mock
+        mock_cascade = MagicMock()
+        mock_cascade.detectMultiScale.return_value = [(100, 100, 200, 200)]
+        detector.face_cascade = mock_cascade
+
+        with patch.object(
+            detector, "_detect_hand_advanced", return_value=(150, 150)
+        ):  # Close to face
             with patch.object(
-                detector, "_detect_hand_advanced", return_value=(150, 150)
-            ):  # Close to face
+                detector, "_detect_motion_in_face_region", return_value=True
+            ):  # Motion detected
                 with patch.object(
-                    detector, "_detect_motion_in_face_region", return_value=True
-                ):  # Motion detected
+                    detector, "_calculate_head_tilt_advanced", return_value=30.0
+                ):  # Good tilt
                     with patch.object(
-                        detector, "_calculate_head_tilt_advanced", return_value=30.0
-                    ):  # Good tilt
-                        with patch.object(
-                            detector, "_calculate_confidence", return_value=0.8
-                        ):
-                            # Mock the sip duration check
-                            detector.sip_start_time = 0
-                            detector.sip_in_progress = True
-                            detector.detection_frames = [
-                                0,
-                                1,
-                                2,
-                                3,
-                                4,
-                                5,
-                                6,
-                                7,
-                                8,
-                                9,
-                            ]  # 10 frames
+                        detector, "_calculate_confidence", return_value=0.8
+                    ):
+                        # Mock the sip duration check
+                        detector.sip_start_time = 0
+                        detector.sip_in_progress = True
+                        detector.detection_frames = [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7,
+                            8,
+                            9,
+                        ]  # 10 frames
 
-                            with patch(
-                                "time.time", return_value=1.0
-                            ):  # 1 second elapsed
-                                result = detector.detect(frame)
+                        with patch(
+                            "time.time", return_value=1.0
+                        ):  # 1 second elapsed
+                            result = detector.detect(frame)
 
-                                assert result is not None
-                                assert result.has_sip is True
+                            assert result is not None
+                            assert result.has_sip is True
                                 assert result.confidence == 0.8
                                 assert result.head_tilt_angle == 30.0
                                 assert (
