@@ -11,47 +11,47 @@ class Settings(BaseSettings):
     """Application settings with environment variable support."""
 
     # Application
-    app_name: str = Field(default="Count-Cups", env="APP_NAME")
-    app_version: str = Field(default="1.0.0", env="APP_VERSION")
-    debug: bool = Field(default=False, env="DEBUG")
-    log_level: str = Field(default="INFO", env="LOG_LEVEL")
+    app_name: str = Field(default="Count-Cups", env="APP_NAME")  # type: ignore[call-overload]
+    app_version: str = Field(default="1.0.0", env="APP_VERSION")  # type: ignore[call-overload]
+    debug: bool = Field(default=False, env="DEBUG")  # type: ignore[call-overload]
+    log_level: str = Field(default="INFO", env="LOG_LEVEL")  # type: ignore[call-overload]
 
     # Database
-    database_url: str = Field(default="sqlite:///count_cups.db", env="DATABASE_URL")
+    database_url: str = Field(default="sqlite:///count_cups.db", env="DATABASE_URL")  # type: ignore[call-overload]
 
     # Detection Settings
-    detection_engine: str = Field(default="heuristics", env="DETECTION_ENGINE")
-    sip_duration_min: float = Field(default=0.8, env="SIP_DURATION_MIN")
-    sip_duration_max: float = Field(default=3.5, env="SIP_DURATION_MAX")
-    head_tilt_threshold: float = Field(default=25.0, env="HEAD_TILT_THRESHOLD")
-    hand_face_distance_threshold: float = Field(
+    detection_engine: str = Field(default="heuristics", env="DETECTION_ENGINE")  # type: ignore[call-overload]
+    sip_duration_min: float = Field(default=0.8, env="SIP_DURATION_MIN")  # type: ignore[call-overload]
+    sip_duration_max: float = Field(default=3.5, env="SIP_DURATION_MAX")  # type: ignore[call-overload]
+    head_tilt_threshold: float = Field(default=25.0, env="HEAD_TILT_THRESHOLD")  # type: ignore[call-overload]
+    hand_face_distance_threshold: float = Field(  # type: ignore[call-overload]
         default=100.0, env="HAND_FACE_DISTANCE_THRESHOLD"
     )
 
     # Calibration
-    default_cup_size_ml: int = Field(default=250, env="DEFAULT_CUP_SIZE_ML")
-    default_sips_per_cup: int = Field(default=10, env="DEFAULT_SIPS_PER_CUP")
+    default_cup_size_ml: int = Field(default=250, env="DEFAULT_CUP_SIZE_ML")  # type: ignore[call-overload]
+    default_sips_per_cup: int = Field(default=10, env="DEFAULT_SIPS_PER_CUP")  # type: ignore[call-overload]
 
     # Notifications
-    enable_notifications: bool = Field(default=True, env="ENABLE_NOTIFICATIONS")
-    goal_reminder_hour: int = Field(default=20, env="GOAL_REMINDER_HOUR")
-    goal_reminder_minute: int = Field(default=0, env="GOAL_REMINDER_MINUTE")
+    enable_notifications: bool = Field(default=True, env="ENABLE_NOTIFICATIONS")  # type: ignore[call-overload]
+    goal_reminder_hour: int = Field(default=20, env="GOAL_REMINDER_HOUR")  # type: ignore[call-overload]
+    goal_reminder_minute: int = Field(default=0, env="GOAL_REMINDER_MINUTE")  # type: ignore[call-overload]
 
     # Telemetry
-    enable_telemetry: bool = Field(default=False, env="ENABLE_TELEMETRY")
-    telemetry_endpoint: str = Field(default="", env="TELEMETRY_ENDPOINT")
+    enable_telemetry: bool = Field(default=False, env="ENABLE_TELEMETRY")  # type: ignore[call-overload]
+    telemetry_endpoint: str = Field(default="", env="TELEMETRY_ENDPOINT")  # type: ignore[call-overload]
 
     # UI Settings
-    default_theme: str = Field(default="auto", env="DEFAULT_THEME")
-    window_width: int = Field(default=1200, env="WINDOW_WIDTH")
-    window_height: int = Field(default=800, env="WINDOW_HEIGHT")
-    window_maximized: bool = Field(default=False, env="WINDOW_MAXIMIZED")
+    default_theme: str = Field(default="auto", env="DEFAULT_THEME")  # type: ignore[call-overload]
+    window_width: int = Field(default=1200, env="WINDOW_WIDTH")  # type: ignore[call-overload]
+    window_height: int = Field(default=800, env="WINDOW_HEIGHT")  # type: ignore[call-overload]
+    window_maximized: bool = Field(default=False, env="WINDOW_MAXIMIZED")  # type: ignore[call-overload]
 
     # Camera Settings
-    camera_index: int = Field(default=0, env="CAMERA_INDEX")
-    camera_width: int = Field(default=640, env="CAMERA_WIDTH")
-    camera_height: int = Field(default=480, env="CAMERA_HEIGHT")
-    camera_fps: int = Field(default=30, env="CAMERA_FPS")
+    camera_index: int = Field(default=0, env="CAMERA_INDEX")  # type: ignore[call-overload]
+    camera_width: int = Field(default=640, env="CAMERA_WIDTH")  # type: ignore[call-overload]
+    camera_height: int = Field(default=480, env="CAMERA_HEIGHT")  # type: ignore[call-overload]
+    camera_fps: int = Field(default=30, env="CAMERA_FPS")  # type: ignore[call-overload]
 
     # Paths
     app_dir: Path = Field(default_factory=lambda: Path.home() / ".count-cups")

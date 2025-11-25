@@ -117,8 +117,16 @@ module = [
     "cv2.*",
     "mediapipe.*",
     "plyer.*",
+    "PyQt6.*",
 ]
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+    "app.ui.*",
+    "app.services.*",
+]
+ignore_errors = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

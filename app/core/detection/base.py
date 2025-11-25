@@ -1,6 +1,7 @@
 """Base detection interface and abstract classes."""
 
 from abc import ABC, abstractmethod
+from typing import Any
 
 import cv2
 import numpy as np
@@ -11,7 +12,7 @@ from app.core.models import DetectionResult
 class DetectionEngine(ABC):
     """Abstract base class for detection engines."""
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: Any) -> None:
         """Initialize detection engine with configuration."""
         self.config = kwargs
 
@@ -44,7 +45,7 @@ class DetectionEngine(ABC):
 class HeuristicDetector(DetectionEngine):
     """Heuristic-based detection using OpenCV only."""
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: Any) -> None:
         """Initialize heuristic detector."""
         super().__init__(**kwargs)
 
@@ -60,11 +61,11 @@ class HeuristicDetector(DetectionEngine):
         self.last_detection_time = 0.0
         self.sip_start_time = 0.0
         self.sip_in_progress = False
-        self.detection_frames = []
+        self.detection_frames: list[float] = []
 
         # Load face cascade
         self.face_cascade = cv2.CascadeClassifier(
-            str(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+            str(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")  # type: ignore[attr-defined]
         )
 
         # Skin color detection parameters
@@ -100,7 +101,8 @@ class HeuristicDetector(DetectionEngine):
             return None
 
         # Calculate head tilt (simplified)
-        head_tilt_angle = self._calculate_head_tilt(face)
+        # Convert numpy array to tuple for type checking
+        head_tilt_angle = self._calculate_head_tilt((int(x), int(y), int(w), int(h)))
 
         # Calculate hand-face distance
         hand_face_distance = np.sqrt(
@@ -214,7 +216,7 @@ class HeuristicDetector(DetectionEngine):
 class MediaPipeDetector(DetectionEngine):
     """MediaPipe-based detection (optional)."""
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: Any) -> None:
         """Initialize MediaPipe detector."""
         super().__init__(**kwargs)
         self.mp_hands = None
@@ -250,9 +252,13 @@ class MediaPipeDetector(DetectionEngine):
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         # Process hands
+        if self.hands is None:
+            return None
         hand_results = self.hands.process(rgb_frame)
 
         # Process face
+        if self.face_mesh is None:
+            return None
         face_results = self.face_mesh.process(rgb_frame)
 
         if (
@@ -263,6 +269,8 @@ class MediaPipeDetector(DetectionEngine):
 
         # Get hand landmarks
         hand_landmarks = hand_results.multi_hand_landmarks[0]
+        if self.mp_hands is None:
+            return None
         wrist = hand_landmarks.landmark[self.mp_hands.HandLandmark.WRIST]
         wrist_pos = (int(wrist.x * frame.shape[1]), int(wrist.y * frame.shape[0]))
 
@@ -306,7 +314,7 @@ class MediaPipeDetector(DetectionEngine):
 
         return None
 
-    def _get_mouth_center(self, face_landmarks, frame_shape: tuple) -> tuple[int, int]:
+    def _get_mouth_center(self, face_landmarks: Any, frame_shape: tuple[int, int]) -> tuple[int, int]:
         """Get mouth center from face landmarks."""
         # MediaPipe face mesh mouth landmarks (simplified)
         mouth_landmarks = [61, 84, 17, 314, 405, 320, 307, 375, 321, 308, 324, 318]
@@ -327,7 +335,7 @@ class MediaPipeDetector(DetectionEngine):
         return (frame_shape[1] // 2, frame_shape[0] // 2)
 
     def _calculate_head_tilt_mediapipe(
-        self, face_landmarks, frame_shape: tuple
+        self, face_landmarks: Any, frame_shape: tuple[int, int]
     ) -> float:
         """Calculate head tilt using MediaPipe face landmarks."""
         # Use eye landmarks to determine tilt
@@ -338,7 +346,7 @@ class MediaPipeDetector(DetectionEngine):
         eye_angle = np.arctan2(right_eye.y - left_eye.y, right_eye.x - left_eye.x)
 
         # Convert to degrees
-        return np.degrees(eye_angle)
+        return float(np.degrees(eye_angle))
 
     def is_available(self) -> bool:
         """Check if MediaPipe detector is available."""
