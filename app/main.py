@@ -164,7 +164,7 @@ def main() -> int:
         main_window.show()
 
         # Apply theme from settings
-        if hasattr(main_window, "theme_manager"):
+        if hasattr(main_window, "theme_manager") and main_window.theme_manager:
             main_window.theme_manager.set_theme(args.theme)
 
         # Run application
@@ -179,13 +179,15 @@ def main() -> int:
 
         # Show error dialog if possible
         try:
-            app = QApplication.instance()
-            if app:
-                QMessageBox.critical(
-                    None,
-                    "Fatal Error",
-                    f"An unexpected error occurred:\n\n{str(e)}\n\nPlease check the logs for more details.",
-                )
+            app_instance = QApplication.instance()
+            if app_instance:
+                from PyQt6.QtWidgets import QApplication as QApp
+                if isinstance(app_instance, QApp):
+                    QMessageBox.critical(
+                        None,
+                        "Fatal Error",
+                        f"An unexpected error occurred:\n\n{str(e)}\n\nPlease check the logs for more details.",
+                    )
         except Exception:
             pass
 

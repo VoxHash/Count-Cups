@@ -4,14 +4,14 @@ This document outlines the planned development roadmap for Count-Cups, including
 
 ## Table of Contents
 
-- [Version 1.1 (Q2 2025)](#version-11-q2-2025)
-- [Version 1.2 (Q3 2025)](#version-12-q3-2025)
-- [Version 1.3 (Q4 2025)](#version-13-q4-2025)
-- [Version 2.0 (Q1 2026)](#version-20-q1-2026)
+- [Version 1.1](#version-11)
+- [Version 1.2](#version-12)
+- [Version 1.3](#version-13)
+- [Version 2.0](#version-20)
 - [Long-term Vision](#long-term-vision)
 - [Community Requests](#community-requests)
 
-## Version 1.1 (Q2 2025)
+## Version 1.1
 
 ### Multi-Profile Goals
 - **Multiple Daily Goals**: Set different goals for different days of the week
@@ -37,7 +37,7 @@ This document outlines the planned development roadmap for Count-Cups, including
 - **Manual CSV Import**: Import from custom CSV files
 - **Export Formats**: Multiple export formats (CSV, JSON, Excel)
 
-## Version 1.2 (Q3 2025)
+## Version 1.2
 
 ### Challenge Mode
 - **Streak Badges**: Achievement system for drinking streaks
@@ -64,7 +64,7 @@ This document outlines the planned development roadmap for Count-Cups, including
 - **Mobile Companion**: Basic mobile app for quick entry
 - **Widgets**: Desktop widgets for quick access
 
-## Version 1.3 (Q4 2025)
+## Version 1.3
 
 ### Tiny REST API
 - **Local API Server**: REST API running locally
@@ -90,7 +90,7 @@ This document outlines the planned development roadmap for Count-Cups, including
 - **Battery Optimization**: Better battery life on laptops
 - **Startup Time**: Faster application startup
 
-## Version 2.0 (Q1 2026)
+## Version 2.0
 
 ### Multi-User Support
 - **User Profiles**: Multiple user profiles on same device

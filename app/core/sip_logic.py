@@ -183,7 +183,7 @@ class CupConverter:
             default_profile: Default cup profile to use
         """
         self.default_profile = default_profile or CupProfile(
-            name="Default", size_ml=250, sips_per_cup=10, is_default=True
+            name="Default", size_ml=250, sips_per_cup=10, color=None, is_default=True
         )
 
     def sips_to_cups(self, sips: int, profile: CupProfile | None = None) -> float:
@@ -328,7 +328,7 @@ class SipTracker:
         # Create manual sip event
         sip_event = SipEvent(
             timestamp=datetime.now(),
-            profile_id=profile.id if profile else 1,
+            profile_id=profile.id if profile and profile.id is not None else 1,
             ml_estimate=ml,
             source=EventSource.MANUAL,
             confidence=1.0,

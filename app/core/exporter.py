@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from app.core.logging import get_logger
-from app.core.models import CupProfile, DailyStats, ExportData, SipEvent
+from app.core.models import CupProfile, DailyStats, EventSource, ExportData, SipEvent
 
 logger = get_logger(__name__)
 
@@ -298,11 +298,15 @@ class DataExporter:
                         )
 
                 # Create SipEvent object
+                # Convert source string to EventSource enum
+                source_str = str(row["source"])
+                source = EventSource.AUTO if source_str == "auto" else EventSource.MANUAL
+                
                 event = SipEvent(
                     timestamp=datetime.fromisoformat(row["timestamp"]),
                     profile_id=int(row["profile_id"]),
                     ml_estimate=float(row["ml_estimate"]),
-                    source=row["source"],
+                    source=source,
                     confidence=float(row["confidence"]) if row["confidence"] else None,
                     detection_data=detection_data,
                 )

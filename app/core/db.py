@@ -1,5 +1,7 @@
 """Database operations and migrations."""
 
+from typing import Any
+
 import sqlite3
 from datetime import date, datetime
 from pathlib import Path
@@ -31,6 +33,14 @@ class Database:
         self.connection: sqlite3.Connection | None = None
         self._ensure_database()
 
+    @property
+    def conn(self) -> sqlite3.Connection:
+        """Get database connection, ensuring it exists."""
+        if self.connection is None:
+            self._ensure_database()
+        assert self.connection is not None, "Database connection must be initialized"
+        return self.connection
+
     def _ensure_database(self) -> None:
         """Ensure database file exists and run migrations."""
         # Ensure parent directory exists
@@ -45,7 +55,7 @@ class Database:
 
     def _run_migrations(self) -> None:
         """Run database migrations."""
-        cursor = self.connection.cursor()
+        cursor = self.conn.cursor()
 
         # Create migrations table
         cursor.execute("""
@@ -83,7 +93,7 @@ class Database:
                 cursor.execute(
                     "INSERT INTO migrations (version) VALUES (?)", (version_num,)
                 )
-                self.connection.commit()
+                self.conn.commit()
 
     def _migration_001_initial_schema(self, cursor: sqlite3.Cursor) -> None:
         """Initial database schema."""
@@ -192,7 +202,7 @@ class Database:
 
         try:
             # Test connection
-            cursor = self.connection.cursor()
+            cursor = self.conn.cursor()
             cursor.execute("SELECT 1")
             return True
         except Exception as e:
@@ -206,18 +216,18 @@ class Database:
                 logger.error(f"Failed to reconnect to database: {e2}")
                 return False
 
-    def __enter__(self):
+    def __enter__(self) -> "Database":
         """Context manager entry."""
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         """Context manager exit."""
         self.close()
 
     # Cup Profile Operations
     def create_cup_profile(self, profile: CupProfile) -> int:
         """Create a new cup profile."""
-        cursor = self.connection.cursor()
+        cursor = self.conn.cursor()
         cursor.execute(
             """
             INSERT INTO cup_profiles (name, size_ml, sips_per_cup, color, is_default, created_at, updated_at)
@@ -233,12 +243,14 @@ class Database:
                 profile.updated_at,
             ),
         )
-        self.connection.commit()
-        return cursor.lastrowid
+        self.conn.commit()
+        rowid = cursor.lastrowid
+        assert rowid is not None, "Failed to get lastrowid"
+        return rowid
 
     def get_cup_profile(self, profile_id: int) -> CupProfile | None:
         """Get cup profile by ID."""
-        cursor = self.connection.cursor()
+        cursor = self.conn.cursor()
         cursor.execute("SELECT * FROM cup_profiles WHERE id = ?", (profile_id,))
         row = cursor.fetchone()
         if row:
@@ -247,7 +259,7 @@ class Database:
 
     def get_all_cup_profiles(self) -> list[CupProfile]:
         """Get all cup profiles."""
-        cursor = self.connection.cursor()
+        cursor = self.conn.cursor()
         cursor.execute("SELECT * FROM cup_profiles ORDER BY created_at DESC")
         return [CupProfile(**dict(row)) for row in cursor.fetchall()]
 
@@ -256,7 +268,7 @@ class Database:
         if not profile.id:
             return False
 
-        cursor = self.connection.cursor()
+        cursor = self.conn.cursor()
         cursor.execute(
             """
             UPDATE cup_profiles
@@ -273,20 +285,20 @@ class Database:
                 profile.id,
             ),
         )
-        self.connection.commit()
+        self.conn.commit()
         return cursor.rowcount > 0
 
     def delete_cup_profile(self, profile_id: int) -> bool:
         """Delete cup profile."""
-        cursor = self.connection.cursor()
+        cursor = self.conn.cursor()
         cursor.execute("DELETE FROM cup_profiles WHERE id = ?", (profile_id,))
-        self.connection.commit()
+        self.conn.commit()
         return cursor.rowcount > 0
 
     # Sip Event Operations
     def create_sip_event(self, event: SipEvent) -> int:
         """Create a new sip event."""
-        cursor = self.connection.cursor()
+        cursor = self.conn.cursor()
         cursor.execute(
             """
             INSERT INTO sip_events (timestamp, profile_id, ml_estimate, source, confidence, detection_data)
@@ -301,8 +313,10 @@ class Database:
                 event.detection_data,
             ),
         )
-        self.connection.commit()
-        return cursor.lastrowid
+        self.conn.commit()
+        rowid = cursor.lastrowid
+        assert rowid is not None, "Failed to get lastrowid"
+        return rowid
 
     def get_sip_events(
         self,
@@ -311,10 +325,10 @@ class Database:
         profile_id: int | None = None,
     ) -> list[SipEvent]:
         """Get sip events with optional filters."""
-        cursor = self.connection.cursor()
+        cursor = self.conn.cursor()
 
         query = "SELECT * FROM sip_events WHERE 1=1"
-        params = []
+        params: list[datetime | int] = []
 
         if start_date:
             query += " AND timestamp >= ?"
@@ -336,7 +350,7 @@ class Database:
     # Daily Goal Operations
     def get_or_create_daily_goal(self, target_date: date, target_ml: int) -> DailyGoal:
         """Get or create daily goal for a date."""
-        cursor = self.connection.cursor()
+        cursor = self.conn.cursor()
 
         # First try to get existing goal
         cursor.execute("SELECT * FROM daily_goals WHERE date = ?", (target_date,))
@@ -375,11 +389,11 @@ class Database:
         row = cursor.fetchone()
 
         if row:
-            self.connection.commit()
+            self.conn.commit()
             return DailyGoal(**dict(row))
         else:
             # This shouldn't happen, but handle it gracefully
-            self.connection.commit()
+            self.conn.commit()
             goal.id = cursor.lastrowid
             return goal
 
@@ -388,7 +402,7 @@ class Database:
         if not goal.id:
             return False
 
-        cursor = self.connection.cursor()
+        cursor = self.conn.cursor()
         cursor.execute(
             """
             UPDATE daily_goals
@@ -404,13 +418,13 @@ class Database:
                 goal.id,
             ),
         )
-        self.connection.commit()
+        self.conn.commit()
         return cursor.rowcount > 0
 
     # Statistics Operations
     def get_daily_stats(self, target_date: date) -> DailyStats:
         """Get daily statistics for a date."""
-        cursor = self.connection.cursor()
+        cursor = self.conn.cursor()
 
         # Get events for the day
         start_datetime = datetime.combine(target_date, datetime.min.time())
@@ -503,7 +517,7 @@ class Database:
     # User Settings Operations
     def get_user_settings(self) -> UserSettings:
         """Get user settings (creates default if not exists)."""
-        cursor = self.connection.cursor()
+        cursor = self.conn.cursor()
         cursor.execute("SELECT * FROM user_settings WHERE id = 1")
         row = cursor.fetchone()
 
@@ -540,7 +554,7 @@ class Database:
                 settings_obj.updated_at,
             ),
         )
-        self.connection.commit()
+        self.conn.commit()
 
         settings_obj.id = 1
         return settings_obj
@@ -550,7 +564,7 @@ class Database:
         if not settings_obj.id:
             return False
 
-        cursor = self.connection.cursor()
+        cursor = self.conn.cursor()
         # Handle theme and detection_engine as either enums or strings
         theme_value = (
             settings_obj.theme.value
@@ -590,5 +604,5 @@ class Database:
                 settings_obj.id,
             ),
         )
-        self.connection.commit()
+        self.conn.commit()
         return cursor.rowcount > 0

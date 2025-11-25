@@ -1,5 +1,7 @@
 """MediaPipe-based detection implementation."""
 
+from typing import Any
+
 import cv2
 import numpy as np
 
@@ -10,7 +12,7 @@ from app.core.models import DetectionResult
 class AdvancedMediaPipeDetector(MediaPipeDetector):
     """Advanced MediaPipe detector with improved accuracy."""
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: Any) -> None:
         """Initialize advanced MediaPipe detector."""
         super().__init__(**kwargs)
 
@@ -43,7 +45,7 @@ class AdvancedMediaPipeDetector(MediaPipeDetector):
         self.sip_start_time = 0.0
         self.sip_in_progress = False
         self.last_detection_time = 0.0
-        self.detection_frames = []
+        self.detection_frames: list[float] = []
 
     def detect(self, frame: np.ndarray) -> DetectionResult | None:
         """Advanced sip detection using MediaPipe."""
@@ -62,9 +64,13 @@ class AdvancedMediaPipeDetector(MediaPipeDetector):
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         # Process hands
+        if self.hands is None:
+            return None
         hand_results = self.hands.process(rgb_frame)
 
         # Process face
+        if self.face_mesh is None:
+            return None
         face_results = self.face_mesh.process(rgb_frame)
 
         if (
@@ -149,10 +155,12 @@ class AdvancedMediaPipeDetector(MediaPipeDetector):
         return None
 
     def _get_wrist_position(
-        self, hand_landmarks, frame_shape: tuple
+        self, hand_landmarks: Any, frame_shape: tuple[int, int]
     ) -> tuple[int, int] | None:
         """Get wrist position from hand landmarks."""
         try:
+            if self.mp_hands is None:
+                return None
             wrist = hand_landmarks.landmark[self.mp_hands.HandLandmark.WRIST]
             x = int(wrist.x * frame_shape[1])
             y = int(wrist.y * frame_shape[0])
@@ -161,7 +169,7 @@ class AdvancedMediaPipeDetector(MediaPipeDetector):
             return None
 
     def _get_mouth_center_advanced(
-        self, face_landmarks, frame_shape: tuple
+        self, face_landmarks: Any, frame_shape: tuple[int, int]
     ) -> tuple[int, int] | None:
         """Get mouth center using advanced landmark analysis."""
         try:
@@ -182,7 +190,7 @@ class AdvancedMediaPipeDetector(MediaPipeDetector):
             return None
 
     def _calculate_head_tilt_advanced(
-        self, face_landmarks, frame_shape: tuple
+        self, face_landmarks: Any, frame_shape: tuple[int, int]
     ) -> float:
         """Calculate head tilt using advanced landmark analysis."""
         try:
@@ -249,7 +257,7 @@ class AdvancedMediaPipeDetector(MediaPipeDetector):
                 )
 
                 # Convert to degrees
-                return np.degrees(eye_angle)
+                return float(np.degrees(eye_angle))
 
             # Fallback to simple method
             return self._calculate_head_tilt_mediapipe(face_landmarks, frame_shape)
@@ -286,11 +294,13 @@ class AdvancedMediaPipeDetector(MediaPipeDetector):
         duration_factor = max(0, duration_factor)
         confidence += duration_factor * 0.2
 
-        return min(1.0, confidence)
+        return float(min(1.0, confidence))
 
-    def _detect_hand_gesture(self, hand_landmarks) -> str:
+    def _detect_hand_gesture(self, hand_landmarks: Any) -> str:
         """Detect hand gesture (simplified)."""
         try:
+            if self.mp_hands is None:
+                return "unknown"
             # Get key finger landmarks
             thumb_tip = hand_landmarks.landmark[self.mp_hands.HandLandmark.THUMB_TIP]
             index_tip = hand_landmarks.landmark[

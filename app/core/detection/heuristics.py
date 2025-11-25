@@ -1,5 +1,7 @@
 """Heuristic-based detection implementation."""
 
+from typing import Any
+
 import cv2
 import numpy as np
 
@@ -10,7 +12,7 @@ from app.core.models import DetectionResult
 class AdvancedHeuristicDetector(HeuristicDetector):
     """Advanced heuristic detector with improved algorithms."""
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: Any) -> None:
         """Initialize advanced heuristic detector."""
         super().__init__(**kwargs)
 
@@ -20,7 +22,7 @@ class AdvancedHeuristicDetector(HeuristicDetector):
         self.contour_max_area = kwargs.get("contour_max_area", 50000)
 
         # Motion detection
-        self.prev_gray = None
+        self.prev_gray: np.ndarray | None = None
         self.flow_threshold = 10.0
 
         # Optical flow parameters
@@ -50,17 +52,19 @@ class AdvancedHeuristicDetector(HeuristicDetector):
 
         # Use largest face
         face = max(faces, key=lambda x: x[2] * x[3])
-        x, y, w, h = face
+        x, y, w, h = int(face[0]), int(face[1]), int(face[2]), int(face[3])
         face_center = (x + w // 2, y + h // 2)
+        # Convert face to tuple for type safety
+        face_tuple: tuple[int, int, int, int] = (x, y, w, h)
 
         # Detect hand using multiple methods
-        hand_center = self._detect_hand_advanced(frame, face)
+        hand_center = self._detect_hand_advanced(frame, face_tuple)
 
         if hand_center is None:
             return None
 
         # Calculate head tilt with improved method
-        head_tilt_angle = self._calculate_head_tilt_advanced(face, gray)
+        head_tilt_angle = self._calculate_head_tilt_advanced(face_tuple, gray)
 
         # Calculate hand-face distance
         hand_face_distance = np.sqrt(
@@ -69,7 +73,7 @@ class AdvancedHeuristicDetector(HeuristicDetector):
         )
 
         # Detect motion in face region
-        motion_detected = self._detect_motion_in_face_region(gray, face)
+        motion_detected = self._detect_motion_in_face_region(gray, face_tuple)
 
         # Check sip conditions
         has_sip = (
@@ -284,15 +288,26 @@ class AdvancedHeuristicDetector(HeuristicDetector):
             # Calculate average angle of detected lines
             angles = []
             for line in lines:
-                rho, theta = line[0]
-                angle = np.degrees(theta)
+                line_data = line[0]  # type: ignore[index]
+                # line_data is a numpy array from cv2.HoughLines
+                # Type ignore needed because mypy doesn't recognize cv2 array types properly
+                if isinstance(line_data, np.ndarray) and line_data.size >= 2:
+                    rho = float(line_data[0])
+                    theta = float(line_data[1])
+                    angle = float(np.degrees(theta))
+                elif isinstance(line_data, (list, tuple)) and len(line_data) >= 2:
+                    rho = float(line_data[0])
+                    theta = float(line_data[1])
+                    angle = float(np.degrees(theta))
+                else:
+                    continue
                 # Normalize angle to -90 to 90 degrees
                 if angle > 90:
                     angle -= 180
                 angles.append(angle)
 
             if angles:
-                avg_angle = np.mean(angles)
+                avg_angle = float(np.mean(angles))
                 return avg_angle
 
         # Fallback to simple method
@@ -305,7 +320,7 @@ class AdvancedHeuristicDetector(HeuristicDetector):
         if self.prev_gray is None:
             return False
 
-        x, y, w, h = face
+        x, y, w, h = face[0], face[1], face[2], face[3]
 
         # Extract face region from current and previous frames
         face_roi = gray[y : y + h, x : x + w]
@@ -323,7 +338,7 @@ class AdvancedHeuristicDetector(HeuristicDetector):
         motion_percentage = motion_pixels / total_pixels
 
         # Return True if motion is significant
-        return motion_percentage > 0.01  # 1% of face region moving
+        return bool(motion_percentage > 0.01)  # 1% of face region moving
 
     def _calculate_confidence(
         self,
@@ -356,4 +371,4 @@ class AdvancedHeuristicDetector(HeuristicDetector):
         duration_factor = max(0, duration_factor)
         confidence += duration_factor * 0.2
 
-        return min(1.0, confidence)
+        return float(min(1.0, confidence))
