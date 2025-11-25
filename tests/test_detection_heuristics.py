@@ -197,9 +197,7 @@ class TestAdvancedHeuristicDetector:
                             9,
                         ]  # 10 frames
 
-                        with patch(
-                            "time.time", return_value=1.0
-                        ):  # 1 second elapsed
+                        with patch("time.time", return_value=1.0):  # 1 second elapsed
                             result = detector.detect(frame)
 
                             assert result is not None
