@@ -204,9 +204,8 @@ class TestAdvancedHeuristicDetector:
                             assert result.has_sip is True
                             assert result.confidence == 0.8
                             assert result.head_tilt_angle == 30.0
-                            assert (
-                                result.hand_face_distance == 50.0
-                            )  # Distance from (150,150) to (200,200)
+                            # Distance from (150,150) to (200,200) = sqrt(50^2 + 50^2) ≈ 70.71
+                            assert abs(result.hand_face_distance - 70.71) < 0.1
 
     def test_detect_hand_by_skin_color(self):
         """Test hand detection by skin color."""

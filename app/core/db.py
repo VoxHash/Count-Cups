@@ -352,7 +352,9 @@ class Database:
         cursor = self.conn.cursor()
 
         # First try to get existing goal
-        cursor.execute("SELECT * FROM daily_goals WHERE date = ?", (target_date,))
+        # Convert date to datetime for comparison (stored dates are datetime)
+        target_datetime = datetime.combine(target_date, datetime.min.time())
+        cursor.execute("SELECT * FROM daily_goals WHERE date = ?", (target_datetime,))
         row = cursor.fetchone()
 
         if row:
@@ -384,7 +386,8 @@ class Database:
         )
 
         # Now get the goal (either newly created or existing)
-        cursor.execute("SELECT * FROM daily_goals WHERE date = ?", (target_date,))
+        # Use the same target_datetime for consistency
+        cursor.execute("SELECT * FROM daily_goals WHERE date = ?", (target_datetime,))
         row = cursor.fetchone()
 
         if row:
