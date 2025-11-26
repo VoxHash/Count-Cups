@@ -305,7 +305,7 @@ Count-Cups/
 ├── tests/                 # Test suite
 ├── scripts/               # Build and utility scripts
 ├── docs/                  # Documentation
-├── .github/               # GitHub Actions CI/CD
+├── .github/               # GitHub templates and issue templates
 └── requirements.txt       # Python dependencies
 ```
 
