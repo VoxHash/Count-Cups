@@ -37,20 +37,17 @@ jobs:
       - name: Generate changelog
         id: changelog
         run: |
-          # Extract changelog for this version
           VERSION=${{ steps.get_version.outputs.version }}
-          CHANGELOG=$(awk "/## \[$VERSION\]/,/## \[/" CHANGELOG.md | head -n -1)
+          # Extract changelog section for this version
+          awk "/## \[$VERSION\]/,/## \[/{if (/## \[/ && !/## \[$VERSION\]/) exit; print}" CHANGELOG.md > /tmp/changelog.txt
           echo "changelog<<EOF" >> $GITHUB_OUTPUT
-          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          cat /tmp/changelog.txt >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ steps.get_version.outputs.version }}
+          name: Release ${{ steps.get_version.outputs.version }}
           body: |
             ## Count-Cups ${{ steps.get_version.outputs.version }}
 
@@ -63,6 +60,7 @@ jobs:
             ## Downloads
 
             Pre-built binaries will be available in the [Releases](https://github.com/VoxHash/Count-Cups/releases) page.
-
           draft: false
           prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
