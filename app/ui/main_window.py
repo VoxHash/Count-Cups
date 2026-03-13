@@ -25,7 +25,8 @@ from app.ui.screens.dashboard import DashboardScreen
 from app.ui.screens.history import HistoryScreen
 from app.ui.screens.live_cam import LiveCameraScreen
 from app.ui.screens.settings import SettingsScreen
-from app.ui.theme import ThemeManager, ThemeMode
+from app.core.models import ThemeMode
+from app.ui.theme import ThemeManager
 
 logger = get_logger(__name__)
 
@@ -378,8 +379,6 @@ class MainWindow(QMainWindow):
         """Apply initial settings."""
         # Set initial theme
         if self.theme_manager:
-            from app.core.models import ThemeMode
-
             theme_enum = ThemeMode(settings.default_theme)
             self.theme_manager.set_theme(theme_enum)
 

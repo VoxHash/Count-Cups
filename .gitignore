@@ -1,13 +1,11 @@
-# Byte-compiled / optimized / DLL files
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
 *.so
+.Python
 
 # Distribution / packaging
-.Python
 build/
 develop-eggs/
 dist/
@@ -49,6 +47,8 @@ coverage.xml
 .pytest_cache/
 test-results/
 junit.xml
+*.lcov
+.nyc_output
 
 # Translations
 *.mo
@@ -106,6 +106,11 @@ celerybeat.pid
 
 # Environments
 .env
+.env*.local
+.env.development.local
+.env.test.local
+.env.production.local
+# Note: .env.example should be committed (it's a template)
 .venv
 env/
 venv/
@@ -138,45 +143,85 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+# Testing
+/coverage
+
+# Production
+*.tsbuildinfo
+
+# Misc
+.DS_Store
+*.pem
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Logs
+logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+.cache
+.turbo
+*.bak
+*.backup
+*.old
+
+# Configuration files
+.editorconfig
+.npmrc
+.nvmrc
+.specstory
+.cursorignore
+.cursorindexingignore
+
+# AI-generated documentation
+AI_M/
+
+# AI-generated temporary scripts
+AI_S/
+
+# Temporary scripts
+create-env-example.sh
+create-env-example.py
+fix-*.sh
+resolve-*.sh
+push-*.sh
+reset-git-history.sh
+setup-github-auth.sh
+push-updates-final.sh
+push-all.sh
+
 # IDEs
 .vscode/
-.idea/
+.idea
 *.swp
 *.swo
 *~
-.DS_Store
 *.sublime-project
 *.sublime-workspace
-
-# PyCharm
-.idea/
-
-# VS Code
-.vscode/
 *.code-workspace
 
-# Sublime Text
-*.sublime-project
-*.sublime-workspace
-
-# Vim
-*.swp
-*.swo
-*~
-
 # macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-Icon
+.DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
+.AppleDouble
+.LSOverride
+Icon
 
 # Windows
-Thumbs.db
 Thumbs.db:encryptable
-ehthumbs.db
 ehthumbs_vista.db
 *.stackdump
 [Dd]esktop.ini
@@ -189,7 +234,6 @@ $RECYCLE.BIN/
 *.lnk
 
 # Linux
-*~
 .fuse_hidden*
 .directory
 .Trash-*
@@ -202,33 +246,14 @@ $RECYCLE.BIN/
 *.sqlite
 *.sqlite3
 
-# Logs
-*.log
-logs/
-*.log.*
-
-# Temporary files
-*.tmp
-*.temp
-*.bak
-*.backup
-*.old
-
 # Nuitka build artifacts
-build/
-dist/
 *.build/
 *.dist/
 *.onefile-build/
 *.onefile-dist/
 
-# MediaPipe / TensorFlow (optional dependencies)
-# These are large and can be installed separately if needed
-
 # Coverage reports
 htmlcov/
-.coverage
-.coverage.*
 coverage.xml
 *.cover
 
@@ -243,7 +268,6 @@ coverage.xml
 
 # Local configuration
 .env.local
-.env.*.local
 .env.development
 .env.production
 .env.test
@@ -251,22 +275,8 @@ coverage.xml
 # Secrets (never commit!)
 secrets/
 *.key
-*.pem
 *.cert
 *.crt
 
 # Application runtime data
 data/
-*.db
-*.sqlite
-*.sqlite3
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-

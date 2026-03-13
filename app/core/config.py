@@ -3,8 +3,8 @@
 from pathlib import Path
 from typing import Any
 
-from pydantic import Field, validator
-from pydantic_settings import BaseSettings
+from pydantic import Field, field_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -61,14 +61,14 @@ class Settings(BaseSettings):
         default_factory=lambda: Path(__file__).parent.parent / "assets"
     )
 
-    class Config:
-        """Pydantic configuration."""
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+    )
 
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = False
-
-    @validator("detection_engine")
+    @field_validator("detection_engine")
+    @classmethod
     def validate_detection_engine(cls, v: str) -> str:
         """Validate detection engine selection."""
         valid_engines = ["heuristics", "mediapipe"]
@@ -76,7 +76,8 @@ class Settings(BaseSettings):
             raise ValueError(f"detection_engine must be one of {valid_engines}")
         return v
 
-    @validator("log_level")
+    @field_validator("log_level")
+    @classmethod
     def validate_log_level(cls, v: str) -> str:
         """Validate log level."""
         valid_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
@@ -84,7 +85,8 @@ class Settings(BaseSettings):
             raise ValueError(f"log_level must be one of {valid_levels}")
         return v.upper()
 
-    @validator("default_theme")
+    @field_validator("default_theme")
+    @classmethod
     def validate_theme(cls, v: str) -> str:
         """Validate theme selection."""
         valid_themes = ["auto", "light", "dark", "dracula"]
@@ -107,7 +109,7 @@ class Settings(BaseSettings):
 
     def to_dict(self) -> dict[str, Any]:
         """Convert settings to dictionary."""
-        return self.dict()
+        return self.model_dump()
 
 
 # Global settings instance

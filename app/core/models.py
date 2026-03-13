@@ -3,7 +3,7 @@
 from datetime import datetime
 from enum import Enum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class EventSource(str, Enum):
@@ -41,10 +41,7 @@ class CupProfile(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
 
-    class Config:
-        """Pydantic configuration."""
-
-        use_enum_values = True
+    model_config = ConfigDict(use_enum_values=True)
 
 
 class SipEvent(BaseModel):
@@ -58,10 +55,7 @@ class SipEvent(BaseModel):
     confidence: float | None = Field(None, ge=0.0, le=1.0)
     detection_data: dict | None = None
 
-    class Config:
-        """Pydantic configuration."""
-
-        use_enum_values = True
+    model_config = ConfigDict(use_enum_values=True)
 
 
 class DailyGoal(BaseModel):
@@ -78,6 +72,8 @@ class DailyGoal(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
 
+    model_config = ConfigDict(use_enum_values=True)
+
     @property
     def progress_percentage(self) -> float:
         """Calculate progress as percentage."""
@@ -89,11 +85,6 @@ class DailyGoal(BaseModel):
     def remaining_ml(self) -> float:
         """Calculate remaining milliliters."""
         return max(0.0, self.target_ml - self.achieved_ml)
-
-    class Config:
-        """Pydantic configuration."""
-
-        use_enum_values = True
 
 
 class UserSettings(BaseModel):
@@ -116,10 +107,7 @@ class UserSettings(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
 
-    class Config:
-        """Pydantic configuration."""
-
-        use_enum_values = True
+    model_config = ConfigDict(use_enum_values=True)
 
 
 class DetectionResult(BaseModel):
@@ -134,10 +122,7 @@ class DetectionResult(BaseModel):
     detection_data: dict | None = None
     timestamp: datetime = Field(default_factory=datetime.now)
 
-    class Config:
-        """Pydantic configuration."""
-
-        use_enum_values = True
+    model_config = ConfigDict(use_enum_values=True)
 
 
 class DailyStats(BaseModel):
@@ -163,10 +148,7 @@ class DailyStats(BaseModel):
         """Calculate cups consumed (assuming 250ml per cup)."""
         return self.total_ml / 250.0
 
-    class Config:
-        """Pydantic configuration."""
-
-        use_enum_values = True
+    model_config = ConfigDict(use_enum_values=True)
 
 
 class WeeklyStats(BaseModel):
@@ -189,10 +171,7 @@ class WeeklyStats(BaseModel):
             return 0.0
         return (self.goal_achieved_days / len(self.daily_stats)) * 100.0
 
-    class Config:
-        """Pydantic configuration."""
-
-        use_enum_values = True
+    model_config = ConfigDict(use_enum_values=True)
 
 
 class ExportData(BaseModel):
@@ -204,7 +183,4 @@ class ExportData(BaseModel):
     cup_profiles: list[CupProfile]
     export_timestamp: datetime = Field(default_factory=datetime.now)
 
-    class Config:
-        """Pydantic configuration."""
-
-        use_enum_values = True
+    model_config = ConfigDict(use_enum_values=True)

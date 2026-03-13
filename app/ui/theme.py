@@ -9,17 +9,9 @@ from PyQt6.QtGui import QColor, QPalette
 from PyQt6.QtWidgets import QApplication
 
 from app.core.logging import get_logger
+from app.core.models import ThemeMode
 
 logger = get_logger(__name__)
-
-
-class ThemeMode(Enum):
-    """Available theme modes."""
-
-    AUTO = "auto"
-    LIGHT = "light"
-    DARK = "dark"
-    DRACULA = "dracula"
 
 
 class ThemeManager(QObject):
