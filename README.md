@@ -99,4 +99,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Count-Cups** - Stay hydrated, stay healthy! 💧
 
-Made with ❤️ by [VoxHash Technologies](https://github.com/VoxHash)
+Made with ❤️ by [VoxHash](https://github.com/VoxHash)
