@@ -1,7 +1,6 @@
 """Theme management for Count-Cups UI."""
 
 import sys
-from enum import Enum
 from typing import Any
 
 from PyQt6.QtCore import QObject, pyqtSignal

@@ -20,12 +20,12 @@ from PyQt6.QtWidgets import (
 from app.core.config import settings
 from app.core.db import Database
 from app.core.logging import get_logger
+from app.core.models import ThemeMode
 from app.ui.screens.calibration import CalibrationScreen
 from app.ui.screens.dashboard import DashboardScreen
 from app.ui.screens.history import HistoryScreen
 from app.ui.screens.live_cam import LiveCameraScreen
 from app.ui.screens.settings import SettingsScreen
-from app.core.models import ThemeMode
 from app.ui.theme import ThemeManager
 
 logger = get_logger(__name__)
