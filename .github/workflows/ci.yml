@@ -60,6 +60,8 @@ jobs:
           mypy app/ --ignore-missing-imports || true
 
       - name: Run tests with pytest
+        env:
+          QT_QPA_PLATFORM: offscreen
         run: |
           pytest tests/ -v --cov=app --cov-report=xml --cov-report=term-missing
 
