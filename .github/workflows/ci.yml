@@ -105,5 +105,5 @@ jobs:
 
       - name: Verify build
         run: |
-          python -m py_compile app/**/*.py
+          python -c "import py_compile, pathlib; [py_compile.compile(str(p)) for p in pathlib.Path('app').rglob('*.py')]"
           echo "Build verification passed"
