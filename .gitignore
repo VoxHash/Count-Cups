@@ -125,3 +125,5 @@ data/
 AI_M/
 AI_S/
 .specstory/
+.cursorindexingignore
+.cursorignore
