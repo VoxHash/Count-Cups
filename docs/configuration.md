@@ -17,7 +17,7 @@ Create a `.env` file in the project root to customize settings:
 ```env
 # Application Settings
 APP_NAME=Count-Cups
-APP_VERSION=1.0.0
+APP_VERSION=1.0.1
 DEBUG=false
 LOG_LEVEL=INFO
 

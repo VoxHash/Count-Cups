@@ -56,9 +56,13 @@ Download the latest release from the [GitHub Releases](https://github.com/VoxHas
 
 #### Prerequisites
 
-- Python 3.10 or higher
+- Python **3.10–3.12** recommended (CI matrix). Python 3.13+ may work for core deps; MediaPipe optional engine does not.
 - pip (Python package manager)
 - Git (for cloning the repository)
+- Webcam (optional for `--no-camera` / manual entry)
+- Linux: OpenGL/EGL libraries for PyQt6 (e.g. `libegl1` on Debian/Ubuntu)
+
+`requirements.txt` pins `opencv-python>=4.8.0,<5`. OpenCV 5.0 removes Haar cascades from the default wheel and breaks sip detection.
 
 #### Installation Steps
 

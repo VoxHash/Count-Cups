@@ -1,43 +1,37 @@
 # Roadmap — Count-Cups
 
-## Q2 2026
+Current release: **1.0.1** (desktop hydration tracker with local CV sip detection).
 
-### Version 1.1
-- Multi-profile goals (different goals for different days)
-- Hydration reminders with smart timing
-- Enhanced system tray integration
-- CSV import/export improvements
+This roadmap stays near-term and realistic. Items move here only when they are next in line to ship.
 
-### Version 1.2
-- Challenge mode with achievements
-- Advanced analytics and insights
-- Export to external platforms (Notion, Obsidian, Google Sheets)
-- UI/UX improvements
+## Near term (v1.1)
 
-## Q3-Q4 2026
+- Detection reliability: better calibration UX, fewer false positives under desk lighting
+- Reminder polish: configurable quiet hours and smarter goal nudges
+- Data: CSV import/export hardening and backup/restore of `~/.count-cups/`
+- Platform: document and CI-guard OpenCV 4.x pin; keep Python 3.10–3.12 as supported matrix
 
-### Version 1.3
-- REST API for local integrations
-- PWA companion app
-- Advanced detection with ML improvements
-- Performance optimizations
+## Next (v1.2)
 
-### Version 2.0
-- Multi-user support
-- Team features
-- Health platform integration (Apple HealthKit, Google Health Connect)
-- Advanced AI features
+- Optional MediaPipe engine usable on supported Python versions (still blocked on 3.13+)
+- Stronger analytics: streaks, weekly trends, clearer dashboard charts
+- Accessibility pass: keyboard navigation and high-contrast themes
 
-## Future
+## Later
 
-- Mobile apps (iOS, Android)
-- Wearable support (Apple Watch, Wear OS)
-- Smart home integration
-- Enterprise features
-- Research partnerships
+- Local REST API for personal integrations
+- Optional PWA companion for manual logging on phone
+- Health platform export (Apple Health / Google Health Connect) behind explicit opt-in
+
+## Explicitly not planned soon
+
+- Cloud sync / accounts
+- Team or multi-user SaaS features
+- Mobile App Store apps
+- “AI-powered” marketing claims beyond the existing local CV heuristics
 
 ---
 
-*This roadmap is a living document and may change based on community feedback and development priorities.*
+*Living document — adjust based on real usage feedback.*
 
-*Last Updated: March 12, 2026*
+*Last Updated: October 5, 2026*

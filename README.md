@@ -69,7 +69,7 @@ Full reference: [docs/configuration.md](docs/configuration.md)
 
 ## 🧩 Architecture
 
-High-level overview: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+High-level overview: [docs/architecture.md](docs/architecture.md)
 
 ## 🗺 Roadmap
 

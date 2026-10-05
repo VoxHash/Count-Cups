@@ -17,7 +17,7 @@ Welcome to the Count-Cups documentation! This is your comprehensive guide to usi
 
 ### Developer Resources
 - **[API Reference](api.md)** - API documentation for developers
-- **[Architecture](ARCHITECTURE.md)** - Technical architecture overview
+- **[Architecture](architecture.md)** - Technical architecture overview
 
 ### Help & Support
 - **[Troubleshooting](troubleshooting.md)** - Common issues and solutions
@@ -36,7 +36,7 @@ docs/
 ├── usage.md               # Usage guide
 ├── cli.md                 # CLI reference
 ├── api.md                 # API documentation
-├── ARCHITECTURE.md        # Architecture overview
+├── architecture.md        # Architecture overview
 ├── CALIBRATION.md         # Calibration guide
 ├── troubleshooting.md     # Troubleshooting guide
 ├── faq.md                # FAQ
@@ -58,4 +58,4 @@ Want to improve the documentation? See [CONTRIBUTING.md](../CONTRIBUTING.md) for
 
 ---
 
-**Last Updated**: March 12, 2026
+**Last Updated**: October 5, 2026

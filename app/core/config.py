@@ -12,7 +12,7 @@ class Settings(BaseSettings):
 
     # Application
     app_name: str = Field(default="Count-Cups", env="APP_NAME")  # type: ignore[call-overload]
-    app_version: str = Field(default="1.0.0", env="APP_VERSION")  # type: ignore[call-overload]
+    app_version: str = Field(default="1.0.1", env="APP_VERSION")  # type: ignore[call-overload]
     debug: bool = Field(default=False, env="DEBUG")  # type: ignore[call-overload]
     log_level: str = Field(default="INFO", env="LOG_LEVEL")  # type: ignore[call-overload]
 
